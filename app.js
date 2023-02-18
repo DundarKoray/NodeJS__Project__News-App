@@ -2,9 +2,9 @@ const express = require('express')
 const app = express()
 const mustacheExpress = require('mustache-express')
 const bodyParser = require('body-parser')
+const pgp = require('pg-promise')()
 const PORT = 3000
-
-
+const CONNECTION_STRING = "postgress://localhost:5432/newsdb"
 
 // configuring your view engine
 app.engine('mustache', mustacheExpress())
@@ -13,14 +13,24 @@ app.set('view engine', 'mustache')
 
 app.use(bodyParser.urlencoded({extended: false}))
 
+const db = pgp(CONNECTION_STRING)
+
 app.post('/register',(req,res) => {
     let username = req.body.username
     let password = req.body.password
 
-    console.log(username)
-    console.log(password)
-
-    res.send('REGISTER')
+    db.oneOrNone('SELECT userid FROM users WHERE username = $1',[username])
+    .then((user) => {
+        if(user) {
+           res.render('register',{message: "User name already exist!"})
+        } else {
+            ///insert user into the users table
+            db.none('INSERT INTO users(username, password) VALUES($1,$2)', [username,password])
+            .then(() => {
+                res.send('SUCCESS')
+            })
+        }
+    })
 })
 
 app.get('/register',(reg,res) => {
