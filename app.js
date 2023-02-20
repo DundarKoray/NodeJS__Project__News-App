@@ -28,10 +28,27 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 const db = pgp(CONNECTION_STRING)
 
+// ADD ARTICLES PAGE STARTS
+app.get('/users/add-articles',(req,res) => {
+    res.render('add-articles')
+})
+// ADD ARTICLES PAGE ENDS
+
 
 // ARTICLES PAGE STARTS
 app.get('/users/articles', (req,res) => {
     res.render('articles',{username: req.session.user.username})
+})
+
+app.post('/users/add-article',(req, res) => {
+    let title = req.body.title
+    let description = req.body.description
+    let userId = req.session.user.userId
+
+    db.none('INSERT INTO articles(title,body,userid) VALUES($1, $2, $3)', [title,description,userId])
+    .then(() => {
+        res.send("SUCCESS")
+    })
 })
 // ARTICLES PAGE STARTS
 
