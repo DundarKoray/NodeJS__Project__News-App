@@ -1,1 +1,32 @@
-{{ username }}
+
+<html>
+<head>
+
+    {{> header }}
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>My articles</h1>
+
+        {{> menu}}
+        <div class="list-group">
+            {{#articles}}
+            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{title}}</h5>
+                <small>3 days ago</small>
+                </div>
+                <p class="mb-1">{{body}}</p>
+                <small>And some small print.</small>
+            </a>
+        </div>
+            {{/articles}}
+    </div>
+
+    {{> footer}}
+
+</body>
+</html>
