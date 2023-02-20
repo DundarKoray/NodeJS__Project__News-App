@@ -4,6 +4,7 @@ const mustacheExpress = require('mustache-express')
 const bodyParser = require('body-parser')
 const pgp = require('pg-promise')()
 const bcrypt = require('bcrypt')
+const expressSession = require('express-session')
 
 const PORT = 3000
 const CONNECTION_STRING = "postgres://localhost:5432/newsdb"
@@ -14,9 +15,27 @@ app.engine('mustache',mustacheExpress())
 app.set('views','./views')
 app.set('view engine','mustache')
 
+app.use(expressSession({
+    secret: 'jkjljkj',
+    resave: false,
+    saveUninitialized: false
+}))
+
 app.use(bodyParser.urlencoded({extended: false}))
 
 const db = pgp(CONNECTION_STRING)
+
+
+// ARTICLES PAGE STARTS
+
+app.get('/users/articles', (req,res) => {
+    res.render('articles',{username: req.session.user.username})
+})
+
+// ARTICLES PAGE STARTS
+
+
+
 
 // LOGIN PAGE STARTS
 app.get('/login',(req,res) => {
@@ -35,7 +54,12 @@ app.post('/login',(req,res) => {
             // if user exists, we check the the password is matching
             bcrypt.compare(password, user.password, function(error,result){
                 if(result) {
-                    res.send('Successs!')
+                    // put username and userId in the session
+                    if(req.session) {
+                        req.session.user = {userId: user.userid, username: user.username}
+                    }
+
+                    res.redirect('/users/articles')
                 }
             })
         } else {
@@ -45,6 +69,10 @@ app.post('/login',(req,res) => {
     })
 })
 // LOGIN PAGE ENDS
+
+
+
+
 
 // REGISTER PAGE STARTS
 app.get('/register',(req,res) => {
