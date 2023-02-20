@@ -32,8 +32,8 @@ const db = pgp(CONNECTION_STRING)
 
 
 // ADD ARTICLES PAGE STARTS
-app.get('/users/add-articles',(req,res) => {
-    res.render('add-articles')
+app.get('/users/add-article',(req,res) => {
+    res.render('add-article')
 })
 
 app.post('/users/add-article',(req, res) => {
@@ -56,9 +56,10 @@ app.post('/users/add-article',(req, res) => {
 // ARTICLES PAGE STARTS
 app.get('/users/articles', (req,res) => {
 
-    let userId = req.session.user.userId;
+    // let userId = req.session.user.userId;
+    let userId = 7;
 
-    db.any('SELECT articleid,title,body FROM articles WHERE userid = $1', [userId])
+    db.any('SELECT articleid,title,body FROM articles WHERE userid = $1',[userId])
     .then((articles) => {
         res.render('articles',{articles: articles})
     })
@@ -66,6 +67,30 @@ app.get('/users/articles', (req,res) => {
 // ARTICLES PAGE ENDS
 
 
+// ARTICLE UPDATE PAGE
+app.post('/users/update-article',(req,res) => {
+
+    let title = req.body.title
+    let description = req.body.description
+    let articleId = req.body.articleId
+
+    db.none('UPDATE articles SET title = $1, body = $2 WHERE articleid = $3', [title,description,articleId])
+    .then(() => {
+        res.redirect('/users/articles')
+    })
+})
+
+
+// ARTICLE EDIT PAGE STARTS
+app.get('/users/articles/edit/:articleId', (req,res) => {
+    let articleId = req.params.articleId
+
+    db.one('SELECT articleid, title, body FROM articles WHERE articleid = $1', [articleId])
+    .then((article) => {
+        res.render('edit-article', article)
+    })
+})
+// ARTICLE EDIT PAGE ENDS
 
 
 
