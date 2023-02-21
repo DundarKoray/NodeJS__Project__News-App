@@ -129,6 +129,16 @@ app.post('/login',(req,res) => {
 // LOGIN PAGE ENDS
 
 
+// DELETE ARTICLE
+app.post('/users/delete-article',(req,res) => {
+    let articleId = req.body.article.id
+
+    db.none('DELETE FROM articles WHERE articleid = $1',[articleId])
+    .then(() => {
+        res.redirect('/users/articles')
+    })
+})
+
 
 
 

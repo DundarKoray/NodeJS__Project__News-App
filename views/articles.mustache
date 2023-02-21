@@ -14,16 +14,20 @@
         {{> menu}}
         <div class="list-group">
             {{#articles}}
-            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{title}}</h5>
-                <small>3 days ago</small>
-                </div>
-                <p class="mb-1">{{body}}</p>
-                <a href="/users/articles/edit/{{articleid}}">
-                    <button type="submit" class="btn btn-primary">Edit</button>
-                </a>
+
+            <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{title}}</h5>
+            <small>3 days ago</small>
+            </div>
+            <p class="mb-1">{{body}}</p>
+            <a href="/users/articles/edit/{{articleid}}">
+                <button type="submit" class="btn btn-primary">Edit</button>
             </a>
+            <form action="/users/delete-article" method="POST">
+                <input type="hidden" name="articleId" value={{articleid}} />
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+
         </div>
             {{/articles}}
     </div>
