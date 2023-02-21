@@ -14,6 +14,20 @@ router.get('/',(req,res) => {
     })
 })
 
+// Logout page
+router.get('/logout',(req,res,next) => {
+    if(req.sesion) {
+        req.session.destroy((error) => {
+            if(error) {
+                next(error)
+            } else {
+                res.redirect('/login')
+            }
+        })
+    }
+})
+
+
 // Show register page
 router.get('/register',(req,res) => {
     res.render('register')
