@@ -7,16 +7,21 @@ const SALT_ROUNDS = 10
 // GET
 
 // Show articles page
+/*
 router.get('/',(req,res) => {
     db.any('SELECT articleid, title,body FROM articles')
     .then((articles) => {
         res.render('index',{articles: articles})
     })
+}) */
+router.get('/', async (req,res) => {
+    let articles = await db.any('SELECT articleid, title, body FROM articles')
+    res.render('index',{articles: articles})
 })
 
 // Logout page
 router.get('/logout',(req,res,next) => {
-    if(req.sesion) {
+    if(req.session) {
         req.session.destroy((error) => {
             if(error) {
                 next(error)

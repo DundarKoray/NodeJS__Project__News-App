@@ -60,13 +60,18 @@ router.post('/update-article',(req,res) => {
 })
 
 // DELETE AN ARTICLE
-router.post('/delete-article',(req,res) => {
+router.post('/delete-article',async (req,res) => {
     let articleId = req.body.articleId
 
+    await db.none('DELETE FROM articles WHERE articleid = $1',[articleId])
+    res.redirect('/users/articles')
+
+    /*
     db.none('DELETE FROM articles WHERE articleid = $1',[articleId])
     .then(() => {
         res.redirect('/users/articles')
     })
+    */
 })
 
 module.exports = router
