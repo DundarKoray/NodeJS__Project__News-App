@@ -17,6 +17,7 @@ const VIEWS_PATH = path.join(__dirname,'/views')
 app.engine('mustache',mustacheExpress(VIEWS_PATH + '/partials', '.mustache'))
 app.set('views',VIEWS_PATH)
 app.set('view engine','mustache')
+app.use('/css',express.static('css')) // localhost:3000/css/site.css
 
 app.use(session({
     secret: 'jkjljkj',
@@ -129,9 +130,18 @@ app.post('/login',(req,res) => {
 // LOGIN PAGE ENDS
 
 
+// Show all articles
+app.get('/',(req,res) => {
+    db.any('SELECT articleid, title,body FROM articles')
+    .then((articles) => {
+        res.render('index',{articles: articles})
+    })
+})
+
+
 // DELETE ARTICLE
 app.post('/users/delete-article',(req,res) => {
-    let articleId = req.body.article.id
+    let articleId = req.body.articleId
 
     db.none('DELETE FROM articles WHERE articleid = $1',[articleId])
     .then(() => {

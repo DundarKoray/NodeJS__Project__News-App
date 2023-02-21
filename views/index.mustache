@@ -1,0 +1,25 @@
+
+<html>
+<head>
+
+    {{> header }}
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Latest articles</h1>
+        {{> menu}}
+        <div class="list-group">
+            {{#articles}}
+            <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{title}}</h5>
+            <small>3 days ago</small>
+            </div>
+            <p class="mb-1">{{body}}</p>
+        </div>
+            {{/articles}}
+    </div>
+    {{> footer}}
+</body>
+</html>
