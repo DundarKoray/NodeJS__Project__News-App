@@ -10,7 +10,7 @@ const checkAuthorization = require('./utils/checkAuthorization')
 const userRoutes = require('./routes/users')
 const indexRoutes = require('./routes/index')
 
-const PORT = 3000
+const PORT = process.env.PORT || 8080
 const CONNECTION_STRING = "postgres://localhost:5432/newsdb"
 
 const VIEWS_PATH = path.join(__dirname,'/views')
